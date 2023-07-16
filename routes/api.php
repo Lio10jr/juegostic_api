@@ -14,10 +14,10 @@ use App\Http\Controllers\AuthController;
 |
 */
 
-Route::middleware('auth:sanctum')->group(function () {
+Route::group(['middleware' => ['jwt.verify']], function() {
     Route::get('user',[AuthController::class, 'user']);
     Route::post('logout',[AuthController::class, 'logout']);
-
 });
+
 Route::post('login',[AuthController::class, 'authLogin']);
 Route::post('registro',[AuthController::class, 'authRegistro']);
