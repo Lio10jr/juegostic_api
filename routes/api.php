@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CampeonatoController;
 use App\Http\Controllers\EquipoController;
+use App\Http\Controllers\PlayersController;
 
 /*
 |--------------------------------------------------------------------------
@@ -33,6 +34,12 @@ Route::group(['middleware' => ['jwt.verify']], function() {
     Route::put('/equiposupdateedit/{id}',[EquipoController::class, 'edit']);
     Route::post('/equiposupdate/{id}',[EquipoController::class, 'update']);
     Route::delete('/equiposdelete/{id}',[EquipoController::class, 'destroy']);
+    
+    /* Players */
+    Route::get('/players',[PlayersController::class, 'index']);
+    Route::post('/playerssave',[PlayersController::class, 'store']);
+    Route::put('/playersupdate/{id}',[PlayersController::class, 'update']);
+    Route::delete('/playersdelete/{id}',[PlayersController::class, 'destroy']);
 });
 
 Route::post('login',[AuthController::class, 'authLogin']);
