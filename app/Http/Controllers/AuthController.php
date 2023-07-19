@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Cookie;
 use Tymon\JWTAuth\Facades\JWTAuth;
 use Illuminate\Support\Facades\Hash;
 use Symfony\Component\HttpFoundation\Response;
+use Illuminate\Support\Str;
 
 class AuthController extends Controller
 {
@@ -31,13 +32,13 @@ class AuthController extends Controller
 
         try {
             $user = User::create([
-                'name' => $request->input('name') . ' ' . $request->input('lastname'),
+                'nombre' => $request->input('name'),
+                'apellido' => $request->input('lastname'),
                 'email' => $request->input('email'),
-                'phone' => $request->input('phone'),
-                'rol' => $request->input('rol'),
+                'celular' => $request->input('phone'),
+                'fk_rol' => $request->input('rol'),
                 'password' => Hash::make($request->input('password')),
             ]);
-            $token = JWTAuth::fromUser($user);
 
         } catch (error) {
             return response()->json([
@@ -47,7 +48,7 @@ class AuthController extends Controller
         
 
         return response()->json([
-            'jwt' => $token,
+            'mensaje' => 'Registro Exitoso',
         ], 201);
     }
 
@@ -68,9 +69,11 @@ class AuthController extends Controller
         }
 
         // Crear una cookie con el token
-        $cookie = cookie('token', $token, 90); // 1 day
+        $cookie = cookie('access_token', $token, 90); // 1 day
 
-        return response(['jwt' => $token])->withCookie($cookie);
+        return response(['access_token' => $token,
+        'token_type' => 'bearer',
+        'expires_in' => auth()->factory()->getTTL() * 90])->withCookie($cookie);
     }
 
 
@@ -78,7 +81,7 @@ class AuthController extends Controller
     {
         try {
             if (!$user = JWTAuth::parseToken()->authenticate()) {
-                return response()->json(['error' => 'Usuario no existe'], 404);
+                return response()->json(['error' => 'Usuario no existe', 'user' => auth()->user()], 404);
             }
         } catch (Tymon\JWTAuth\Exceptions\TokenExpiredException $e) {
             return response()->json(['error' => 'Token expired'], $e->getStatusCode());
@@ -100,5 +103,14 @@ class AuthController extends Controller
         $cookie = cookie::forget('jwt');
 
         return response()->json(['mensaje' => 'Sesion Cerrada'])->withCookie($cookie);
+    }
+
+    protected function respondWithToken($token)
+    {
+        return response()->json([
+            'access_token' => $token,
+            'token_type' => 'bearer',
+            'expires_in' => auth()->factory()->getTTL() * 90
+        ]);
     }
 }
