@@ -6,6 +6,9 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CampeonatoController;
 use App\Http\Controllers\EquipoController;
 use App\Http\Controllers\PlayersController;
+use App\Http\Controllers\FaseEncuentrosController;
+use App\Http\Controllers\EncuentrosController;
+use App\Http\Controllers\ViewEncuentrosFaseController;
 
 /*
 |--------------------------------------------------------------------------
@@ -40,6 +43,23 @@ Route::group(['middleware' => ['jwt.verify']], function() {
     Route::post('/playerssave',[PlayersController::class, 'store']);
     Route::put('/playersupdate/{id}',[PlayersController::class, 'update']);
     Route::delete('/playersdelete/{id}',[PlayersController::class, 'destroy']);
+
+    /* Fase Encuentros */
+    Route::get('/fencuentros',[FaseEncuentrosController::class, 'index']);
+    Route::post('/fencuentrossave',[FaseEncuentrosController::class, 'store']);
+    Route::put('/fencuentrosupdate/{id}',[FaseEncuentrosController::class, 'update']);
+    Route::delete('/fencuentrosdelete/{id}',[FaseEncuentrosController::class, 'destroy']);
+
+    /* Encuentros */
+    Route::get('/encuentros',[EncuentrosController::class, 'index']);
+    Route::get('/encuentros/{id_enc}',[EncuentrosController::class, 'show']);
+    Route::post('/encuentrossave',[EncuentrosController::class, 'store']);
+    Route::put('/encuentrosupdate/{id}',[EncuentrosController::class, 'update']);
+    Route::delete('/encuentrosdelete/{id}',[EncuentrosController::class, 'destroy']);
+
+    /* View Encuentros Fase */
+    Route::get('/viewencuentros',[ViewEncuentrosFaseController::class, 'index']);
+    Route::get('/viewencuentros/{campeonato}',[ViewEncuentrosFaseController::class, 'show']);
 });
 
 Route::post('login',[AuthController::class, 'authLogin']);
