@@ -46,10 +46,20 @@ class FaseEncuentrosController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Fase_Encuentros $fase_Encuentros)
+    public function show($id_fase_e)
     {
         try {
-            $fase_Encuentros = Fase_Encuentros::find($fase_Encuentros);
+            $fase_Encuentros = Fase_Encuentros::where('id_fase_e', $id_fase_e)->get();
+        } catch (\Throwable $th) {
+            return response()->json(['error' => 'Error en la consulta SQL'], 500);
+        }
+        return response()->json($fase_Encuentros);
+    }
+
+    public function showCamp($idcamp)
+    {
+        try {
+            $fase_Encuentros = Fase_Encuentros::where('fk_idcamp', $idcamp)->get();
         } catch (\Throwable $th) {
             return response()->json(['error' => 'Error en la consulta SQL'], 500);
         }

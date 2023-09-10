@@ -66,10 +66,10 @@ class EquipoController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Equipo $equipo)
+    public function show($pk_idequ)
     {
         try {
-            $eq = Equipo::find($equipo);
+            $eq = Equipo::where('pk_idequ', $pk_idequ)->get();
         } catch (\Throwable $th) {
             return response()->json(['error' => 'Error en la consulta SQL'], 500);
         }

@@ -5,26 +5,27 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Encuentros extends Model
+class Tabla_Posiciones extends Model
 {
-    protected $table = 'encuentros';
+    protected $table = 'tabla_posiciones';
     public $timestamps = false; 
-    protected $primaryKey = 'id_enc';
+    protected $primaryKey = 'id_posicion';
     protected $keyType = 'string';
     public $incrementing = false;
 
     protected $fillable = [
-        'id_enc',
+        'id_posicion',
         'fk_idcamp',
-        'fk_idequlocal',
         'fk_id_fase_e',
-        'goleslocal',
-        'fk_idequvisit',
-        'golesvisit',
-        'campo',
-        'fecha_hora',
+        'fk_idequ',
         'numgrupo',
-        'estado_encuentro',
-
+        'pj',
+        'pg',
+        'pe',
+        'pp',
+        'gf',
+        'gc',
+        'gd',
+        'pts',
     ];
 }

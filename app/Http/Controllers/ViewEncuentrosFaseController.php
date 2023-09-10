@@ -35,10 +35,21 @@ class ViewEncuentrosFaseController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show($campeonato)
+    public function show($id_fase_e)
     {
         try {
-            $encuentrosFase = View_Encuentros_Fase::where('fk_idcamp', $campeonato)->get();
+            $encuentrosFase = View_Encuentros_Fase::where('id_fase_e', $id_fase_e)->get();
+    
+        } catch (\Throwable $th) {
+            return response()->json(['error' => 'Error en la consulta SQL'], 500);
+        }
+        return response()->json($encuentrosFase);
+    }
+
+    public function showCamp($fk_idcamp)
+    {
+        try {
+            $encuentrosFase = View_Encuentros_Fase::where('fk_idcamp', $fk_idcamp)->get();
     
         } catch (\Throwable $th) {
             return response()->json(['error' => 'Error en la consulta SQL'], 500);

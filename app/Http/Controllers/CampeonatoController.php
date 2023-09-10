@@ -14,7 +14,7 @@ class CampeonatoController extends Controller
     public function index()
     {
         $campeonatos = Campeonato::all();
-        return response()->json($campeonatos); 
+        return response()->json($campeonatos);
     }
 
     /**
@@ -22,7 +22,6 @@ class CampeonatoController extends Controller
      */
     public function create()
     {
-        
     }
 
     /**
@@ -41,17 +40,17 @@ class CampeonatoController extends Controller
         } catch (\Throwable $th) {
             return response()->json(['error' => 'Error en la consulta SQL'], 500);
         }
-        
+
         return response()->json('Campeonato creado!');
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(Campeonato $campeonato)
+    public function show($pk_idcamp)
     {
         try {
-            $camp = Campeonato::find($campeonato);
+            $camp = Campeonato::where('pk_idcamp', $pk_idcamp)->get();
         } catch (\Throwable $th) {
             return response()->json(['error' => 'Error en la consulta SQL'], 500);
         }
@@ -80,12 +79,28 @@ class CampeonatoController extends Controller
         return response()->json('Campeonato Actualizado');
     }
 
+    public function updateEstado(Request $request, string $id)
+    {
+        try {
+            // Encuentra el campeonato por su ID
+            $campeonato = Campeonato::find($id);
+
+            $campeonato->estado = false;
+            $campeonato->save();
+        } catch (\Throwable $th) {
+            return response()->json(['error' => 'Error en la consulta SQL'], 500);
+        }
+
+        return response()->json('Estado del Campeonato Actualizado');
+    }
+
+
     /**
      * Remove the specified resource from storage.
      */
     public function destroy(string $id)
     {
-        
+
         try {
             $campeonato = Campeonato::find($id);
             $campeonato->delete();

@@ -11,12 +11,10 @@ class Fase_Encuentros extends Model
     protected $table = 'fase_encuentros';
     public $timestamps = false; 
     protected $primaryKey = 'id_fase_e';
-    protected $keyType = 'string';
     public $incrementing = false;
 
     protected $fillable = [
         'id_fase_e',
-        'nombre_fase',
-        'numero_fase'
+        'nombre_fase'
     ];
 }
