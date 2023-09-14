@@ -9,27 +9,13 @@ use Tymon\JWTAuth\Facades\JWTAuth;
 use Illuminate\Support\Facades\Hash;
 use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Support\Str;
+use Tymon\JWTAuth\Exceptions\TokenExpiredException;
+
 
 class AuthController extends Controller
 {
     public function authRegistro(Request $request)
     {
-        /* try {
-            if (!$user = JWTAuth::parseToken()->authenticate()) {
-                return response()->json([
-                    'error' => 'No autorizado'
-                ], 401);
-            }
-        }catch(JWTException $e) {
-            return response()->json([
-                'error' => 'Token no creado'
-            ], 500);
-        }
-
-        if ($user->rol == 'presidente') {
-            return response()->json(['mensaje' => 'Usted no tiene permisos para registrar un nuevo usuario']);
-        } */
-
         try {
             $user = User::create([
                 'nombre' => $request->input('name'),
@@ -40,9 +26,9 @@ class AuthController extends Controller
                 'password' => Hash::make($request->input('password')),
             ]);
 
-        } catch (error) {
+        } catch (\Exception $e) {
             return response()->json([
-                'Error' => error,
+                'Error' => $e,
             ], 201);
         }
         
@@ -62,18 +48,37 @@ class AuthController extends Controller
                     'error' => 'No autorizado'
                 ], 401);
             }
-        }catch(JWTException $e) {
+        }catch(\Exception $e) {
             return response()->json([
                 'error' => 'Token no creado'
             ], 500);
         }
-
+        // Obtener el usuario autenticado
+        $user = auth()->user();
+        
         // Crear una cookie con el token
         $cookie = cookie('access_token', $token, 90); // 1 day
 
-        return response(['access_token' => $token,
-        'token_type' => 'bearer',
-        'expires_in' => auth()->factory()->getTTL() * 90])->withCookie($cookie);
+        // Convertir los datos del usuario en una cadena JSON
+        $userData = [
+            'user' => $user,
+        ];
+
+        $userDataJson = json_encode($userData);
+
+        $usercookie  = cookie('user_', $userDataJson, 90); // 1 day
+
+        $response = response([
+            'access_token' => $token,
+            'user_' => $userDataJson,
+            'token_type' => 'bearer',
+            'expires_in' => auth()->factory()->getTTL() * 90]);
+
+        // Asignar ambas cookies a la respuesta
+        $response->withCookie($cookie);
+        $response->withCookie($usercookie);
+
+        return $response;
     }
 
 

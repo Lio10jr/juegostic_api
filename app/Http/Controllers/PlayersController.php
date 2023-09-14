@@ -49,10 +49,10 @@ class PlayersController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Players $players)
+    public function show($fk_idequ)
     {
         try {
-            $pla = Players::find($players);
+            $pla = Players::where('fk_idequ', $fk_idequ)->get();
         } catch (\Throwable $th) {
             return response()->json(['error' => 'Error en la consulta SQL'], 500);
         }

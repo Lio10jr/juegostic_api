@@ -66,6 +66,17 @@ class EquipoController extends Controller
     /**
      * Display the specified resource.
      */
+    public function showCamp($fk_idcamp)
+    {
+        try {
+            $eq = Equipo::where('fk_idcamp', $fk_idcamp)->get();
+        } catch (\Throwable $th) {
+            return response()->json(['error' => 'Error en la consulta SQL'], 500);
+        }
+        
+        return response()->json($eq);
+    }
+
     public function show($pk_idequ)
     {
         try {
@@ -76,7 +87,6 @@ class EquipoController extends Controller
         
         return response()->json($eq);
     }
-
     /**
      * Show the form for editing the specified resource.
      */
